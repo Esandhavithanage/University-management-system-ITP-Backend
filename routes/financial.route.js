@@ -4,7 +4,71 @@ var mysql = require('mysql');
 const con = require('../DB');
 const financialRoutes = express.Router();
 
-// get employee attendence
+// get employee salary
+financialRoutes.route('/getSalary/:id').get(function (req, res) {
+  var id = req.params.id;
+  
+  sql = "SELECT s.salaryId as salId, s.basicsalary as basicSal, s.OTAmount as OTAmount, s.EPF as EPF, s.ETF as ETF, e.name as empName " +
+    "FROM salary s, employee e " +
+    "WHERE s.salaryId = e.salaryId AND e.employeeId = '"+id+"'; ";
+
+  con.query(sql, function(err, result) {
+    if(err) throw err;
+    res.json(result);
+  });
+  
+});
+
+// cal attendance return OT hours
+financialRoutes.route('/getOT/:id/:startDate/:endDate').get(function(req, res) {
+  var id = req.params.id;
+  var startDate = req.params.startDate;
+  var endDate = req.params.endDate;
+  var OTHours = 0;
+  var OTMinutes = 0;
+  var start = new Date(startDate);
+  var end = new Date(endDate);
+  console.log(start + " " + end);
+
+  sql = "SELECT arrivalTime as aTime, exitTime as eTime, date as date, employeeId as empId " +
+    "FROM attendance " +
+    "WHERE employeeId = '"+id+"';";
+
+  con.query(sql, function(err, result) {
+    if(err) throw err;
+
+    for(var i in result){
+
+      // check date range
+      if(new Date(result[i].date) >= start && new Date(result[i].date) <= end ){
+        
+        var eTime1 = new String(result[i].eTime);
+        var hours = eTime1.substring(0, 2);
+        var minutes = eTime1.substring(3, 5);
+
+        // check timeoff
+        if(parseInt(hours) == 15 && parseInt(minutes) > 30){
+          OTMinutes += minutes - 30;
+        }
+        if(parseInt(hours) > 15){
+          if(parseInt(minutes) > 30){
+            OTMinutes += minutes - 30;
+            OTHours += hours - 15;          
+          }
+          if(parseInt(minutes <= 30)){
+            OTMinutes += minutes;
+          }
+        }
+         
+      }
+
+    }
+    var totalOT = (OTMinutes/60) + OTHours;
+    console.log(totalOT);
+    res.json(totalOT);
+  });
+ 
+});
 
 
 // add expences

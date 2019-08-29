@@ -77,9 +77,10 @@ eventRoutes.route('/registerEvent').post(function (req, res) {
     var id = req.body.eventId;
     var studentId = req.body.studentId;
     var date = req.body.date;
+    console.log(studentId);
 
-    var sql = "INSERT INTO (`studentId`, `eventId`, `date`) " +
-        "VALUES ('"+id+"', '"+studentId+"', '"+date+"'); ";
+    var sql = "INSERT INTO studentevent (`studentId`, `eventId`, `date`) " +
+        "VALUES ('"+studentId+"', '"+id+"', '"+date+"'); ";
 
     con.query(sql, function (err, result) {
         if (err) throw err;
@@ -89,6 +90,38 @@ eventRoutes.route('/registerEvent').post(function (req, res) {
 
 });
 
+// get registered students event
+eventRoutes.route('/getRStudents').get(function (req, res) {
+    console.log(req.body);
+    
+    var sql = "SELECT se.studentId as studentId, se.eventId as eventId, se.date as date, s.name as studentName, e.title as eventName " +
+        "FROM studentevent se, student s, event e " +
+        "WHERE se.studentId = s.studentId AND se.eventId = e.eventId " +
+        "ORDER BY se.eventId ";
+
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json(result);
+    });
+
+});
+
+// delete registered students event
+eventRoutes.route('/deleteRStudents/:eventId/:studentId').get(function (req, res) {
+    console.log(req.body);
+    var eventId = req.params.eventId;
+    var studentId = req.params.studentId;
+    
+    var sql = "DELETE FROM studentevent WHERE eventId='"+eventId+"' AND studentId='"+studentId+"' ";
+
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("deleted " + result);
+        res.json(result);
+    });
+
+});
 
 
 module.exports = eventRoutes;

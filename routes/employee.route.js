@@ -11,7 +11,7 @@ employeeRoute.route('/addAttendance').post(function (req, res) {
   var date = req.body.date;
   var arrivalTime = req.body.arrival_time;
   var exitTime = req.body.exit_time;
-  var sql = "INSERT INTO `ums`.`attendance`(`arrivalTime`,`exitTime`,`date`, `employeeId`)"
+  var sql = "INSERT INTO `ums`.`attendance`(`arivaleTime`,`exitTime`,`date`, `employeeId`)"
     + " VALUES('" + arrivalTime + "','" + exitTime + "','" + date + "','" + id + "');";
   console.log(sql);
 
@@ -25,7 +25,7 @@ employeeRoute.route('/addAttendance').post(function (req, res) {
 
 // get attendance
 employeeRoute.route('/getAttendance').get(function (req, res) {
-  var sql = "SELECT attendanceId as id, arrivalTime as arrivalTime, exitTime as exitTime, date as date, employeeId as empId " +
+  var sql = "SELECT attendanceId as id, arivaleTime as arrivalTime, exitTime as exitTime, date as date, employeeId as empId " +
     "FROM attendance " +
     "ORDER BY attendanceId";
 
@@ -45,7 +45,7 @@ employeeRoute.route('/updateAttendance').post(function (req, res) {
   var exitTime = req.body.exitTime;
   var attendanceId = req.body.attendanceId;
 
-  var sql = "UPDATE attendance SET arrivalTime='"+arrivalTime+"', exitTime='"+exitTime+"', date='"+date+"', employeeId='"+empId+"' "
+  var sql = "UPDATE attendance SET arivaleTime='"+arrivalTime+"', exitTime='"+exitTime+"', date='"+date+"', employeeId='"+empId+"' "
     + "WHERE attendanceId='"+attendanceId+"'; ";
   console.log(sql);
 
@@ -73,7 +73,7 @@ employeeRoute.route('/getEmployee').get(function (req, res) {
 
 // get all employees
 employeeRoute.route('/getEmployeeAll').get(function (req, res) {
-  var sql = "SELECT employeeId as id, name as name, address as address, gender as gender, NIC as nic, email as email, type as type, title as title, password as pwd, salaryId as salId, timetableId as timetableId, employeecol as employeecol " +
+  var sql = "SELECT employeeId as id, name as name, address as address, gender as gender, NIC as nic, email as email, type as type, title as title, password as pwd, salaryId as salId, timetableId as timetableId " +
     "FROM employee " +
     "ORDER BY employeeId; ";
 
@@ -160,8 +160,8 @@ employeeRoute.route('/addMRequest').post(function (req, res) {
   var description = req.body.description;
   var amount = req.body.amount;
 
-  var sql = "INSERT INTO moneyrequest (`date`, `amount`, `description`, `employeeId`) " +
-    "VALUES ('"+date+"', '"+amount+"', '"+description+"', '"+empId+"'); ";
+  var sql = "INSERT INTO moneyrequest (`date`, `amount`, `description`, `status`, `employeeId`) " +
+    "VALUES ('"+date+"', '"+amount+"', '"+description+"', 'pending', '"+empId+"'); ";
 
   con.query(sql, function (err, result) {
     if (err) throw err;

@@ -97,7 +97,7 @@ financialRoutes.route('/searchI/:fDate/:tDate').get(function (req, res) {
     var tDate = new Date(req.params.tDate);
     var filteredIncomes = [];
 
-    var sql =  "SELECT paymentId as paymentId, amount as amount, date as date, courseId as courseId, title as title FROM payment;"
+    var sql =  "SELECT paymentId as paymentId, amount as amount, date as date, courseId as courseId, courseId as coueseId FROM payment;"
     con.query(sql, function (err, result) {
       if (err) throw err;
 

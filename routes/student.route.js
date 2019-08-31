@@ -188,8 +188,9 @@ studentRoutes.route('/deleteteCourse/:id').get(function (req, res) {
   });
 });
 
+// get payments
 studentRoutes.route('/getPayments').get(function (req, res) {
-  var sql = "SELECT paymentId as payId, amount as amount, date as date, courseId as courseId, title as title " +
+  var sql = "SELECT paymentId as payId, amount as amount, date as date, courseId as courseId " +
     "FROM payment " +
     "ORDER BY paymentId;";
 
@@ -201,6 +202,7 @@ studentRoutes.route('/getPayments').get(function (req, res) {
 
 });
 
+// add payments
 studentRoutes.route('/addPayments').post(function (req, res) {
   console.log(req.body);
   var amount = req.body.amount;
@@ -219,7 +221,7 @@ studentRoutes.route('/addPayments').post(function (req, res) {
 
 });
 
-
+// update payments
 studentRoutes.route('/updatePayments').post(function (req, res) {
   console.log(req.body);
   var payId = req.body.payId;
